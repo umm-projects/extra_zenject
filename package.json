@@ -1,0 +1,30 @@
+{
+  "name": "@umm/extra_zenject",
+  "version": "1.0.0",
+  "description": "Extra Utilities for Zenject",
+  "homepage": "https://github.com/umm/extra_zenject",
+  "bugs": {
+    "url": "https://github.com/umm/extra_zenject/issues"
+  },
+  "scripts": {
+    "umm:init": "umm-init",
+    "umm:generate_assembly_definition": "umm-generate_assembly_definition",
+    "umm:module:install": "umm-module-install",
+    "umm:module:uninstall": "umm-module-uninstall",
+    "postinstall": "npm run --silent umm:module:install",
+    "postuninstall": "npm run --silent umm:module:uninstall"
+  },
+  "author": "Tetsuya Mori",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:umm/extra_zenject"
+  },
+  "files": [
+    "Assets"
+  ],
+  "dependencies": {
+    "@umm/scripts": "umm/scripts#^1.0.0"
+  },
+  "devDependencies": {}
+}
