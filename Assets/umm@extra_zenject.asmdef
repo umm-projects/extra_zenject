@@ -1,3 +1,15 @@
-﻿{
-	"name": "umm@extra_zenject"
+{
+    "name": "umm@extra_zenject",
+    "references": [
+        "umm@unirx",
+        "Zenject"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
 }
