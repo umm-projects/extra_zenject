@@ -12,7 +12,7 @@ namespace ExtraZenject
     {
         public static void OnSpawn<T>(this ISpawnedInstancePublisher self)
         {
-            self.Publisher.Fire(new SpawnedInstance<T>((T) self));
+            self.Publisher.TryFire(new SpawnedInstance<T>((T) self));
         }
     }
 }
