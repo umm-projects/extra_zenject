@@ -24,6 +24,7 @@
     "Assets"
   ],
   "dependencies": {
+    "@umm/extra_unirx": "umm/extra_unirx#^1.0.0",
     "@umm/scripts": "umm/scripts#^1.0.0"
   },
   "devDependencies": {}
