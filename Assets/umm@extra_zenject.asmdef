@@ -1,6 +1,7 @@
 {
     "name": "umm@extra_zenject",
     "references": [
+        "umm@extra_unirx",
         "umm@unirx",
         "Zenject"
     ],

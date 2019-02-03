@@ -7,37 +7,29 @@ using Zenject;
 namespace ExtraZenject
 {
     [RequireComponent(typeof(ZenjectBinding))]
-    public class ZenjectSpawnedInstanceHelper : MonoBehaviour
+    public class ZenjectInstancePublisher : MonoBehaviour
     {
         private ZenjectBinding cachedZenjectBinding;
         private ZenjectBinding ZenjectBinding => cachedZenjectBinding ? cachedZenjectBinding : (cachedZenjectBinding = GetComponent<ZenjectBinding>());
 
-        private SignalBus SignalBus { get; set; }
+        private static IInstanceBroker Publisher { get; set; }
 
-        private static Type SpawnedInstanceType { get; } = typeof(SpawnedInstance<>);
+        private void Awake()
+        {
+            if (Publisher == default)
+            {
+                Publisher = ProjectContext.Instance.Container.Resolve<IInstanceBroker>();
+            }
+        }
 
         private void Start()
         {
-            SignalBus =
-                (
-                    // Resolve SignalBus from SceneContext to match context if ZenjectBinding.UseSceneContext is true
-                    ZenjectBinding.UseSceneContext
-                        ? gameObject
-                            .scene
-                            // Expect that there is a SceneContext in Root
-                            .GetRootGameObjects()
-                            .First(x => x.GetComponent<SceneContext>() != null)
-                            .GetComponent<SceneContext>()
-                            .Container
-                        : ProjectContext.Instance.Container
-                )
-                .Resolve<SignalBus>();
             foreach (var component in ZenjectBinding.Components)
             {
                 switch (ZenjectBinding.BindType)
                 {
                     case ZenjectBinding.BindTypes.Self:
-                        SignalBus.TryFire(component.GetType(), component);
+                        InvokeFire(component.GetType(), component);
                         break;
                     case ZenjectBinding.BindTypes.AllInterfaces:
                         component
@@ -52,7 +44,7 @@ namespace ExtraZenject
                             .GetInterfaces()
                             .ToList()
                             .ForEach(type => InvokeFire(type, component));
-                        SignalBus.TryFire(component.GetType(), component);
+                        InvokeFire(component.GetType(), component);
                         break;
                     case ZenjectBinding.BindTypes.BaseType:
                         if (component.GetType().BaseType != default)
@@ -66,27 +58,25 @@ namespace ExtraZenject
             }
         }
 
-        private void InvokeFire(Type type, object instance)
+        private static void InvokeFire(Type type, object instance)
         {
-            var targetType = SpawnedInstanceType.MakeGenericType(type);
-            SignalBus
+            Publisher
                 .GetType()
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
                 .First(
                     mi =>
-                        mi.Name == "TryFire"
+                        mi.Name == "TryPublish"
                         && mi.IsGenericMethod
                         && mi.IsGenericMethodDefinition
                         && mi.ContainsGenericParameters
-                        && mi.GetParameters().Length == 2
+                        && mi.GetParameters().Length == 1
                 )
-                .MakeGenericMethod(targetType)
+                .MakeGenericMethod(type)
                 .Invoke(
-                    SignalBus,
+                    Publisher,
                     new[]
                     {
-                        Activator.CreateInstance(targetType, instance),
-                        string.IsNullOrEmpty(ZenjectBinding.Identifier) ? null : ZenjectBinding.Identifier
+                        instance
                     }
                 );
         }
