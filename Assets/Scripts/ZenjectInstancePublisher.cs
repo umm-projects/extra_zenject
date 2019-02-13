@@ -16,7 +16,7 @@ namespace ExtraZenject
 
         private void Awake()
         {
-            if (Publisher == default)
+            if (Publisher == default(IInstanceBroker))
             {
                 Publisher = ProjectContext.Instance.Container.Resolve<IInstanceBroker>();
             }
@@ -47,7 +47,7 @@ namespace ExtraZenject
                         InvokeFire(component.GetType(), component);
                         break;
                     case ZenjectBinding.BindTypes.BaseType:
-                        if (component.GetType().BaseType != default)
+                        if (component.GetType().BaseType != default(Type))
                         {
                             InvokeFire(component.GetType().BaseType, component);
                         }
