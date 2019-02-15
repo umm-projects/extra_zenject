@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
@@ -69,8 +69,7 @@ namespace ExtraZenject
         {
             if (ReactivePropertyMap.ContainsKey(type))
             {
-                Debug.LogWarning($"`{type}' has already declared.");
-                return;
+                ((ReactiveProperty<object>) ReactivePropertyMap[type]).Dispose();
             }
 
             ReactivePropertyMap[type] = new ReactiveProperty<object>();
