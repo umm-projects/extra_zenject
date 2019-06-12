@@ -22,7 +22,7 @@ namespace ExtraZenject
             BrokableInstanceType,
         }
 
-        private IDictionary<Type, IReactiveProperty<object>> ReactivePropertyMap { get; } = new Dictionary<Type, IReactiveProperty<object>>();
+        private IDictionary<Type, ISubject<object>> SubjectMap { get; } = new Dictionary<Type, ISubject<object>>();
 
         [Inject]
         public void Construct(
@@ -67,28 +67,28 @@ namespace ExtraZenject
 
         private void DeclareInternal(Type type)
         {
-            if (ReactivePropertyMap.ContainsKey(type))
+            if (SubjectMap.ContainsKey(type))
             {
-                ((ReactiveProperty<object>) ReactivePropertyMap[type]).Dispose();
+                ((ReplaySubject<object>) SubjectMap[type]).Dispose();
             }
 
-            ReactivePropertyMap[type] = new ReactiveProperty<object>();
+            SubjectMap[type] = new ReplaySubject<object>();
         }
 
         private void ReleaseInternal(Type type)
         {
-            if (!ReactivePropertyMap.ContainsKey(type))
+            if (!SubjectMap.ContainsKey(type))
             {
                 Debug.LogWarning($"`{type}' does not declared.");
                 return;
             }
 
-            ReactivePropertyMap.Remove(type);
+            SubjectMap.Remove(type);
         }
 
         private void PublishInternal<T>(T instance, bool assert)
         {
-            if (!ReactivePropertyMap.ContainsKey(typeof(T)))
+            if (!SubjectMap.ContainsKey(typeof(T)))
             {
                 if (assert)
                 {
@@ -98,12 +98,12 @@ namespace ExtraZenject
                 return;
             }
 
-            ReactivePropertyMap[typeof(T)].Value = instance;
+            SubjectMap[typeof(T)].OnNext(instance);
         }
 
         private IObservable<T> ReceiveInternal<T>(bool assert)
         {
-            if (!ReactivePropertyMap.ContainsKey(typeof(T)))
+            if (!SubjectMap.ContainsKey(typeof(T)))
             {
                 if (assert)
                 {
@@ -113,7 +113,7 @@ namespace ExtraZenject
                 return Observable.Never<T>();
             }
 
-            return ReactivePropertyMap[typeof(T)]
+            return SubjectMap[typeof(T)]
                 .Where(x => (!(x is Object) && x != null) || (Object) x != null)
                 .Select(x => (T) x);
         }
