@@ -1,7 +1,7 @@
 {
   "name": "dev.upm-packages.extra-zenject",
   "displayName": "Extra Zenject",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "unity": "2019.3",
   "description": "",
   "author": {
@@ -10,7 +10,9 @@
     "email": "monry84@gmail.com"
   },
   "license": "MIT",
-  "keywords": ["Zenject"],
+  "keywords": [
+    "Zenject"
+  ],
   "category": "",
   "dependencies": {
     "com.stevevermeulen.extenject": "9.1.0-5",
