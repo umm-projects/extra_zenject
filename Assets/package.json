@@ -1,0 +1,23 @@
+{
+  "name": "dev.upm-packages.extra-zenject",
+  "displayName": "Extra Zenject",
+  "version": "1.4.0",
+  "unity": "2019.3",
+  "description": "",
+  "author": {
+    "name": "Tetsuya Mori",
+    "url": "https://me.monry.dev/",
+    "email": "monry84@gmail.com"
+  },
+  "license": "MIT",
+  "keywords": ["Zenject"],
+  "category": "",
+  "dependencies": {
+    "com.stevevermeulen.extenject": "9.1.0-5",
+    "jp.cysharp.unirx": "7.1.0",
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/umm/extra_zenject"
+  }
+}
