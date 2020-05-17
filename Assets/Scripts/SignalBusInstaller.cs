@@ -6,7 +6,10 @@ namespace ExtraZenject
     {
         public override void InstallBindings()
         {
-            Zenject.SignalBusInstaller.Install(Container);
+            if (!Container.HasBinding<SignalBus>())
+            {
+                Zenject.SignalBusInstaller.Install(Container);
+            }
         }
     }
 }
